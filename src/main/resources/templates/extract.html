@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Extract Message</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="container">
+    <h2>🔍 Extract Hidden Message</h2>
+
+    <form action="/extract" method="post" enctype="multipart/form-data">
+        <label>Select Stego Image</label>
+        <input type="file" name="file" accept="image/png" required>
+
+        <button type="submit">Extract</button>
+    </form>
+
+    <div class="result" th:if="${message}">
+        <h3>📩 Extracted Message:</h3>
+        <p th:text="${message}"></p>
+    </div>
+
+    <a href="/"><button class="back">⬅ Back</button></a>
+</div>
+
+</body>
+</html>
