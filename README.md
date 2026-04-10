@@ -1,79 +1,112 @@
-# Digital Steganography- USING JAVA
-Data security is a common issue nowadays and it needs protection from various cyber threats, digital steganography helps in safeguarding it. It offers an approach that hides sensitive information within digital files such as text, images etc. Unlike traditional methods. Steganography doesn’t change the data directly, it provides a high level of security. This method promotes privacy, helps in maintaining data integrity and helps in defending against cyber threats. We have used the concept of steganography to build an application which does steganography in text, image and also handwritten text. Project Overview:-
+# 🔐 Digital Steganography Web Application
 
-Our objective is to explore, understand and utilize steganography for securing users data. Steganography conceals sensitive information in ordinary files, keeping it completely secret for the users. Our project stands as a tool for data protection for users by hiding their data like text and images and help in hiding data in plain sight by using encryption and steganography algorithms.
+A full-stack secure web application that allows users to **hide and extract secret messages inside images** using **AES encryption** and **LSB (Least Significant Bit) steganography**.
 
-# Project Structure
+---
 
-## Frontend Structure (Thymeleaf html + CSS)
-src
+## 🚀 Features
 
-└── main
+### 🔑 Authentication System
+- User Registration & Login
+- Secure Password Handling
+- Forgot Password with OTP verification
 
-    └── resources
-    
-        ├── templates
-        │   ├── index.html
-        │   ├── embed.html
-        │   └── extract.html
-        │
-        ├── static
-        │   ├── css
-        │   │   └── style.css
-        │   │
-        │   └── js
-        │       └── script.js
-        │
-        └── application.properties
+### 🖼 Steganography
+- Embed secret messages inside PNG images
+- Extract hidden messages from images
+- Uses **LSB (Least Significant Bit)** technique
 
-  ## Backend Structure
+### 🔐 Security
+- AES Encryption for message security
+- Password-protected embedding & extraction
+- Input validation (PNG-only upload)
+
+### 🎨 User Interface
+- Modern responsive UI (Thymeleaf + CSS)
+- Dark/Light mode toggle 🌙☀
+- Smooth animations & transitions
+- Image preview before upload
+- Toast notifications for feedback
+
+### 📥 File Handling
+- Download embedded images
+- Real-time image preview before processing
+
+---
+
+## 🛠 Tech Stack
+
+### Backend:
+- Java 24
+- Spring Boot 3
+- Spring Security
+- Spring MVC
+
+### Frontend:
+- Thymeleaf
+- HTML5 + CSS3
+- JavaScript (UI enhancements)
+
+### Database:
+- MySQL
+
+### Security & Processing:
+- AES Encryption
+- LSB Image Steganography
+
+---
+
+# 📁Project Structure
 src
 
 └── main
 
     ├── java
-    │   └── com
-    │       └── example
-    │           └── demo
-    │               ├── DemoApplication.java
-    │               │
-    │               ├── config
-    │               │   └── SecurityConfig.java
-    │               │
-    │               ├── controller
-    │               │   ├── StegoController.java
-    │               │   ├── ViewController.java
-    │               │   └── AuthController.java 
-    │               │
-    │               ├── service
-    │               │   ├── StegoService.java
-    │               │   ├── CryptoService.java
-    │               │   └── UserService.java (optional)
-    │               │
-    │               ├── repository
-    │               │   └── UserRepository.java (optional)
-    │               │
-    │               ├── entity
-    │               │   ├── User.java 
-    │               │ 
-    │               │
-    │               ├── dto
-    │               │   ├── LoginRequest.java
-    │               │   ├── SignupRequest.java
-    │               │   └── StegoRequest.java
-    │               │
-    │               ├── exception
-    │               │   ├── GlobalExceptionHandler.java
-    │               │   └── CustomException.java
-    │               │
-    │               └── util
-    │                   └── FileUtil.java
+    │   └── com.example.demo
+    │       ├── DemoApplication.java
+    │
+    │       ├── config
+    │       │   ├── SecurityConfig.java
+    │       │   └── AppConfig.java
+    │
+    │       ├── controller
+    │       │   ├── StegoController.java
+    │       │   ├── ViewController.java
+    │       │   └── AuthController.java
+    │
+    │       ├── service
+    │       │   ├── StegoService.java
+    │       │   ├── CryptoService.java
+    │       │   └── UserService.java
+    │
+    │       ├── repository
+    │       │   └── UserRepository.java
+    │
+    │       ├── entity
+    │       │   └── User.java
+    │
+    │       ├── dto
+    │       │   ├── LoginRequest.java
+    │       │   ├── SignupRequest.java
+    │       │   └── StegoRequest.java
+    │
+    │       ├── exception
+    │       │   ├── GlobalExceptionHandler.java
+    │       │   └── CustomException.java
+    │
+    │       └── util
+    │           └── FileUtil.java
     │
     └── resources
         ├── templates
         │   ├── index.html
+        │   ├── login.html
+        │   ├── register.html
+        │   ├── dashboard.html
         │   ├── embed.html
-        │   └── extract.html
+        │   ├── extract.html
+        │   ├── forgot-password.html
+        │   └── verify-otp.html
         │
         ├── static
         │   ├── css
@@ -83,31 +116,40 @@ src
         │       └── script.js
         │
         └── application.properties
-# Tech Stack
 
-- Backend: Spring Boot, Spring Security, Spring Data JPA
-- Frontend: Thymeleaf, HTML, CSS
-- Database: MySQL
-- Build Tool: Maven
-- Language: Java
+## ⚙️ How It Works
 
-# Endpoints
+### 🔐 Embedding Process:
+1. User uploads a PNG image
+2. Message is encrypted using AES
+3. Encrypted message is hidden inside image pixels using LSB
+4. New image is generated and downloaded
 
-| Method | Endpoint     | Description        |
-|--------|-------------|--------------------|
-| GET    | /login      | Login page         |
-| GET    | /register   | Register page      |
-| POST   | /register   | Register user      |
-| GET    | /home       | Dashboard          |
-| GET    | /embed      | Embed page         |
-| GET    | /extract    | Extract page       |
+### 🔍 Extraction Process:
+1. User uploads stego image
+2. Hidden data is extracted from LSB bits
+3. AES decryption is applied using password
+4. Original message is displayed
 
-# Validation
+---
 
-- Username: 4–20 characters
-- Password: Minimum 6 characters
-- Unique username enforced
-- Error messages shown on UI
+## 📸 Screenshots
+Login Page ->
+<img width="1920" height="1080" alt="Screenshot (40)" src="https://github.com/user-attachments/assets/a6ee7f7f-5eef-4f42-9d85-24cdbbfeb9df" />
+Register Page ->
+<img width="1920" height="1080" alt="Screenshot (41)" src="https://github.com/user-attachments/assets/3d33f022-c603-42a7-be4c-0a5d402850cc" />
+Forgot Password Page ->
+<img width="1920" height="1080" alt="Screenshot (42)" src="https://github.com/user-attachments/assets/0519743b-ccc8-42b0-8861-d389d83a8304" />
+Reset Password Page ->
+<img width="1920" height="1080" alt="Screenshot (43)" src="https://github.com/user-attachments/assets/8d6505c4-cd52-490c-871f-26047336f0ff" />
+Dashboard ->
+<img width="1920" height="1080" alt="Screenshot (44)" src="https://github.com/user-attachments/assets/4184cd4b-87d7-4505-946a-029f1f9c91aa" />
+Embed Page ->
+<img width="1920" height="1080" alt="Screenshot (45)" src="https://github.com/user-attachments/assets/97cfd954-77ac-410e-879f-18a91323f502" />
+Extract Page ->
+<img width="1920" height="1080" alt="Screenshot (46)" src="https://github.com/user-attachments/assets/a4eba76d-7376-405b-b24f-3e988c53e4a7" />
+
+---
 # Author
 
 Amandeep Singh  
