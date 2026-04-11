@@ -17,9 +17,7 @@ public class StegoService {
     // ================= EMBED =================
     public byte[] embed(MultipartFile file, String message) throws Exception {
 
-        if (!file.getContentType().equals("image/png")) {
-            throw new RuntimeException("Only PNG images are allowed");
-        }
+
 
         BufferedImage image = ImageIO.read(file.getInputStream());
 
