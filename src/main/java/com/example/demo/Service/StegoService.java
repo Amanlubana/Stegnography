@@ -1,6 +1,5 @@
 package com.example.demo.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,27 +10,33 @@ import java.io.ByteArrayOutputStream;
 @Service
 public class StegoService {
 
-    @Autowired
-    private CryptoService cryptoService;
+
+
+
 
     // ================= EMBED =================
     public byte[] embed(MultipartFile file, String message) throws Exception {
 
+        if (!file.getContentType().equals("image/png")) {
+            throw new RuntimeException("Only PNG images are allowed");
+        }
+
         BufferedImage image = ImageIO.read(file.getInputStream());
 
         if (image == null) {
-            throw new Exception("Invalid image (use PNG)");
+            throw new Exception("Invalid image");
         }
 
-        // Encrypt + End marker
-        message = cryptoService.encrypt(message) + "\0";
+
+        // Add end marker
+        String finalMessage = message + "\0";
 
         int width = image.getWidth();
         int height = image.getHeight();
 
         int maxChars = (width * height) / 8;
-        if (message.length() > maxChars) {
-            throw new Exception("Message too large for this image");
+        if (finalMessage.length() > maxChars) {
+            throw new Exception("Message too large for this image.");
         }
 
         int msgIndex = 0;
@@ -41,13 +46,14 @@ public class StegoService {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
 
-                if (msgIndex >= message.length()) break outer;
+                if (msgIndex >= finalMessage.length()) break outer;
 
                 int pixel = image.getRGB(x, y);
 
-                int charVal = message.charAt(msgIndex);
+                int charVal = finalMessage.charAt(msgIndex);
                 int bit = (charVal >> (7 - charIndex)) & 1;
 
+                // Modify only LSB
                 pixel = (pixel & 0xFFFFFFFE) | bit;
 
                 image.setRGB(x, y, pixel);
@@ -64,6 +70,9 @@ public class StegoService {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, "png", baos);
 
+
+
+
         return baos.toByteArray();
     }
 
@@ -73,7 +82,7 @@ public class StegoService {
         BufferedImage image = ImageIO.read(file.getInputStream());
 
         if (image == null) {
-            throw new Exception("Invalid image");
+            throw new Exception("Invalid image.");
         }
 
         StringBuilder binary = new StringBuilder();
@@ -90,8 +99,9 @@ public class StegoService {
                 if (binary.length() == 8) {
                     int charCode = Integer.parseInt(binary.toString(), 2);
 
+                    // End marker reached
                     if (charCode == 0) {
-                        return cryptoService.decrypt(message.toString());
+                        return message.toString();
                     }
 
                     message.append((char) charCode);
@@ -100,6 +110,7 @@ public class StegoService {
             }
         }
 
-        return message.toString();
+        // If no end marker found → likely no hidden data
+        throw new Exception("No hidden message found in image.");
     }
 }

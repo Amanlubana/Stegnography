@@ -4,15 +4,28 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.MessageDigest;
 import java.util.Base64;
 
 @Service
 public class CryptoService {
 
-    private static final String KEY = "1234567890123456";
+    // 🔑 Generate AES key from password
+    private SecretKeySpec getKey(String password) throws Exception {
+        MessageDigest sha = MessageDigest.getInstance("SHA-256");
+        byte[] key = sha.digest(password.getBytes());
 
-    public String encrypt(String data) throws Exception {
-        SecretKeySpec key = new SecretKeySpec(KEY.getBytes(), "AES");
+        // Use first 16 bytes (AES-128)
+        byte[] keyBytes = new byte[16];
+        System.arraycopy(key, 0, keyBytes, 0, 16);
+
+        return new SecretKeySpec(keyBytes, "AES");
+    }
+
+    // 🔐 Encrypt using password
+    public String encrypt(String data, String password) throws Exception {
+        SecretKeySpec key = getKey(password);
+
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, key);
 
@@ -20,8 +33,10 @@ public class CryptoService {
         return Base64.getEncoder().encodeToString(encrypted);
     }
 
-    public String decrypt(String data) throws Exception {
-        SecretKeySpec key = new SecretKeySpec(KEY.getBytes(), "AES");
+    // 🔓 Decrypt using password
+    public String decrypt(String data, String password) throws Exception {
+        SecretKeySpec key = getKey(password);
+
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, key);
 
