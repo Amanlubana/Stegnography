@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Verify OTP</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h2>🔑 Verify OTP</h2>
+
+        <!-- OTP MESSAGE -->
+        <p th:if="${otp}" class="success">
+            OTP sent to your email
+        </p>
+
+        <form method="post" action="/reset-password">
+
+            <input type="hidden" name="username" th:value="${username}" />
+            <input type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}" />
+
+            <input type="text" name="otp" placeholder="Enter OTP" required>
+
+            <input type="password" name="newPassword" placeholder="New Password" required>
+
+            <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+
+            <button type="submit">Reset Password</button>
+        </form>
+
+        <!-- ERROR -->
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+
+        <!-- SUCCESS -->
+        <p th:if="${success}" class="success" th:text="${success}"></p>
+
+        <div class="nav-links">
+            <a href="/login">⬅ Back to Login</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

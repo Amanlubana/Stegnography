@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h2>📝 Create Account</h2>
+
+        <form th:action="@{/register}" th:object="${user}" method="post">
+
+            <!-- USERNAME -->
+            <input type="text" th:field="*{username}" placeholder="Username" required/>
+            <p class="error"
+               th:if="${#fields.hasErrors('username')}"
+               th:errors="*{username}"></p>
+
+            <!-- PASSWORD -->
+            <input type="password" th:field="*{password}" placeholder="Password" required/>
+            <p class="error"
+               th:if="${#fields.hasErrors('password')}"
+               th:errors="*{password}"></p>
+
+
+            <!-- EMAIL -->
+            <input type="email" th:field="*{email}" placeholder="Email Address" required/>
+
+            <button type="submit">Register</button>
+
+            <!-- GLOBAL ERROR -->
+            <p class="error" th:if="${error}" th:text="${error}"></p>
+
+        </form>
+
+        <!-- NAVIGATION -->
+        <div class="nav-links">
+            <span style="color:#ccc;">Already have an account?</span><br>
+            <a href="/login">Login</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

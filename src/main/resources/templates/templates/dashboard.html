@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="card dashboard-card">
+
+        <h2>🚀 Dashboard</h2>
+
+        <p class="subtitle">Choose an action</p>
+
+        <div class="dashboard-actions">
+
+            <a href="/embed">
+                <button class="primary-btn">🖼 Embed Secret</button>
+            </a>
+
+            <a href="/extract">
+                <button class="secondary-btn">🔍 Extract Secret</button>
+            </a>
+
+        </div>
+
+        <hr class="divider">
+
+        <form th:action="@{/logout}" method="post">
+            <button onclick="showLoader(this)" class="logout-btn">
+                🚪 Logout
+            </button>
+
+
+
+        </form>
+
+    </div>
+</div>
+
+</body>
+</html>
