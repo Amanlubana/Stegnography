@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Embed Secret</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
 </head>
 <body>
 
@@ -17,7 +19,7 @@
 
         <form th:action="@{/embed}" method="post" enctype="multipart/form-data">
 
-            <input type="file" id="fileInput" name="file" accept="image/png" required>
+            <input type="file" id="fileInput" name="file" accept="image/*"required>
 
             <!-- IMAGE PREVIEW -->
             <div class="preview-box">
@@ -49,13 +51,7 @@
         const file = this.files[0];
 
         if (file) {
-            // Validate PNG
-            if (file.type !== "image/png") {
-                alert("Only PNG images allowed!");
-                fileInput.value = "";
-                previewImage.style.display = "none";
-                return;
-            }
+
 
             const reader = new FileReader();
 
