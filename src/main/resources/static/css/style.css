@@ -1,67 +1,222 @@
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+/* RESET */
+* {
     margin: 0;
-    color: white;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
+/* THEME VARIABLES */
+:root {
+    --bg: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    --card-bg: rgba(255,255,255,0.05);
+    --text: #ffffff;
+    --input-bg: rgba(255,255,255,0.1);
+}
+
+body.light-mode {
+    --bg: #f4f6f9;
+    --card-bg: #ffffff;
+    --text: #222;
+    --input-bg: #f1f1f1;
+}
+
+/* BODY */
+body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 15px;
+    transition: all 0.4s ease;
+}
+
+/* CONTAINER */
 .container {
-    width: 400px;
-    margin: 60px auto;
-    background: rgba(0,0,0,0.7);
-    padding: 25px;
-    border-radius: 12px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CARD */
+.card {
+    width: 100%;
+    max-width: 380px;
+
+    padding: 20px;
+    border-radius: 15px;
+
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+
     text-align: center;
+
+    animation: fadeIn 0.6s ease-in-out;
 }
 
-h1, h2 {
-    margin-bottom: 10px;
+/* TITLE */
+h2 {
+    margin-bottom: 15px;
 }
 
+/* INPUTS */
 input, textarea {
-    width: 90%;
-    padding: 10px;
+    width: 100%;
+    padding: 12px;
     margin: 10px 0;
-    border-radius: 6px;
+
+    border-radius: 8px;
     border: none;
+    outline: none;
+
+    background: var(--input-bg);
+    color: var(--text);
 }
 
-textarea {
-    height: 80px;
+/* INPUT FOCUS */
+input:focus, textarea:focus {
+    box-shadow: 0 0 10px #00d4ff;
 }
 
+/* PLACEHOLDER */
+input::placeholder,
+textarea::placeholder {
+    color: #ccc;
+}
+
+/* BUTTON */
 button {
-    padding: 10px 15px;
-    background: #00c6ff;
+    width: 100%;
+    padding: 12px;
+
     border: none;
-    border-radius: 6px;
-    color: white;
+    border-radius: 8px;
+
+    background: #00d4ff;
+    color: black;
+
+    font-weight: bold;
     cursor: pointer;
+
+    transition: all 0.2s ease;
 }
 
 button:hover {
-    background: #0072ff;
+    background: #00aacc;
 }
 
-.buttons button {
-    margin: 10px;
-    width: 150px;
+button:active {
+    transform: scale(0.96);
 }
 
-.preview {
-    width: 200px;
+/* LINKS */
+a {
+    color: #00d4ff;
+    text-decoration: none;
+    display: inline-block;
     margin-top: 10px;
-    display: none;
 }
 
-.result {
-    margin-top: 20px;
-    background: #222;
-    padding: 10px;
-    border-radius: 8px;
+/* MESSAGES */
+.success {
+    color: #00ffae;
+    margin-top: 10px;
 }
 
-.back {
+.error {
+    color: #ff4d4d;
+    margin-top: 10px;
+}
+
+/* IMAGE PREVIEW */
+.preview-box {
     margin-top: 15px;
-    background: gray;
+}
+
+.preview-box img {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+
+    border-radius: 12px;
+    border: 2px dashed #00d4ff;
+    padding: 5px;
+
+    transition: 0.3s;
+}
+
+.preview-box img:hover {
+    transform: scale(1.03);
+}
+
+/* DASHBOARD */
+.dashboard-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.primary-btn { background: #00d4ff; color: black; }
+.secondary-btn { background: #4facfe; color: white; }
+.logout-btn { background: #ff4d4d; color: white; }
+
+.primary-btn:hover { background: #00aacc; }
+.secondary-btn:hover { background: #3a8dde; }
+.logout-btn:hover { background: #cc0000; }
+
+/* DIVIDER */
+.divider {
+    margin: 20px 0;
+    border: 0.5px solid rgba(255,255,255,0.1);
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 🔥 MOBILE OPTIMIZATION */
+@media (max-width: 600px) {
+
+    body {
+        padding: 10px;
+        align-items: center;
+    }
+
+    .card {
+        max-width: 100%;
+        padding: 18px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    input, textarea {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .preview-box img {
+        max-height: 180px;
+    }
 }
