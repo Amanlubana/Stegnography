@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embed Secret</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+
+        <h2>🖼 Embed Secret</h2>
+
+        <p th:if="${success}" class="success" th:text="${success}"></p>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+
+        <form th:action="@{/embed}" method="post" enctype="multipart/form-data">
+
+            <input type="file" id="fileInput" name="file" accept="image/*"required>
+
+            <!-- IMAGE PREVIEW -->
+            <div class="preview-box">
+                <img id="previewImage" src="#" alt="Preview will appear here" style="display:none;" />
+            </div>
+
+            <textarea name="message" placeholder="Enter secret message..." required></textarea>
+
+            <input type="password" name="password" placeholder="Secret Password" required>
+
+            <button type="submit">🔐 Embed & Download </button>
+        </form>
+
+        <div class="nav-links">
+            <a href="/dashboard">⬅ Back</a>
+        </div>
+        <a href="/extract">Go To Extract</a>
+    </div>
+</div>
+</body>
+</html>
+
+
+<script>
+    const fileInput = document.getElementById("fileInput");
+    const previewImage = document.getElementById("previewImage");
+
+    fileInput.addEventListener("change", function () {
+        const file = this.files[0];
+
+        if (file) {
+
+
+            const reader = new FileReader();
+
+            reader.addEventListener("load", function () {
+                previewImage.setAttribute("src", this.result);
+                previewImage.style.display = "block";
+            });
+
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
