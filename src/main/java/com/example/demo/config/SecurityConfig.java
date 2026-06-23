@@ -2,80 +2,90 @@ package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.core.userdetails.UserDetailsService;
-
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
 
     private final AppConfig appConfig;
-
     private final UserDetailsService userService;
 
-    public SecurityConfig(AppConfig appConfig, UserDetailsService userService) {
+    public SecurityConfig(AppConfig appConfig,
+                          UserDetailsService userService) {
         this.appConfig = appConfig;
         this.userService = userService;
     }
 
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-
     @Bean
     public DaoAuthenticationProvider authProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userService);
-        authProvider.setPasswordEncoder(appConfig.passwordEncoder());
-        return authProvider;
+        DaoAuthenticationProvider provider =
+                new DaoAuthenticationProvider();
+
+        provider.setUserDetailsService(userService);
+        provider.setPasswordEncoder(appConfig.passwordEncoder());
+
+        return provider;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+    public SecurityFilterChain filterChain(HttpSecurity http)
+            throws Exception {
 
+        http
 
                 .authenticationProvider(authProvider())
 
                 .authorizeHttpRequests(auth -> auth
+
+                        // Public pages
                         .requestMatchers(
-                                "/register",
+                                "/",
                                 "/login",
+                                "/register",
                                 "/forgot-password",
                                 "/generate-otp",
-                                "/reset-password",
-                                "/css/**"
+                                "/verify-otp",
+                                "/reset-password"
                         ).permitAll()
-                        .requestMatchers("/dashboard").authenticated()
+
+                        // Static resources
+                        .requestMatchers(
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/webjars/**"
+                        ).permitAll()
+
+                        // Protected pages
+                        .requestMatchers(
+                                "/dashboard",
+                                "/embed",
+                                "/extract"
+                        ).authenticated()
+
                         .anyRequest().authenticated()
                 )
 
-
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .loginProcessingUrl("/login") // IMPORTANT
+                        .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/dashboard", true)
-                        .failureUrl("/login?error=true")
+                        .failureUrl("/login?error")
                         .permitAll()
                 )
 
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // important
+                        .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 );
 
         return http.build();
-
-
     }
 }
