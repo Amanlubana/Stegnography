@@ -1,17 +1,13 @@
-FROM maven:3.9.9-eclipse-temurin-17 AS build
+FROM eclipse-temurin:17-jdk
 
 WORKDIR /app
 
 COPY . .
 
-RUN mvn clean package -DskipTests
+RUN chmod +x mvnw
 
-FROM eclipse-temurin:17-jre
-
-WORKDIR /app
-
-COPY --from=build /app/target/*.jar app.jar
+RUN ./mvnw clean package -DskipTests
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","app.jar"]
+ENTRYPOINT ["java","-jar","target/stego-0.0.1-SNAPSHOT.jar"]
