@@ -74,7 +74,10 @@ public class AuthController {
     public String forgotPasswordPage() {
         return "forgot-password";
     }
-
+    @GetMapping("/verify-otp")
+    public String verifyOtpPage() {
+        return "verify-otp";
+    }
 
 
     // Step 2: Verify OTP + Reset password
@@ -103,12 +106,28 @@ public class AuthController {
             return "verify-otp";
         }
     }
-        @PostMapping("/generate-otp")
-        public String generateOtp(@RequestParam String username, Model model) {
+    @PostMapping("/generate-otp")
+    public String generateOtp(@RequestParam String username, Model model) {
+
+        try {
+            System.out.println("========== GENERATE OTP CALLED ==========");
+            System.out.println("Username: " + username);
+
             userService.generateOtp(username);
-            model.addAttribute("username", username); // 🔥 REQUIRED
+
+            model.addAttribute("username", username);
+
             return "verify-otp";
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            model.addAttribute("error", e.getMessage());
+
+            return "forgot-password";
         }
+    }
 }
 
 
