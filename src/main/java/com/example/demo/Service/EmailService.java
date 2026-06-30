@@ -15,16 +15,23 @@ public class EmailService {
 
     public void sendOtp(String toEmail, String otp) {
 
+        long start = System.currentTimeMillis();
+
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);
 
-            helper.setFrom("ambusy24o7@gmail.com"); // 🔥 MUST
+            helper.setFrom("ambusy24o7@gmail.com");
             helper.setTo(toEmail);
             helper.setSubject("OTP for Password Reset");
             helper.setText("Your OTP is: " + otp);
 
+            System.out.println("Sending mail...");
+
             mailSender.send(message);
+
+            System.out.println("Mail sent in "
+                    + (System.currentTimeMillis() - start) + " ms");
 
         } catch (Exception e) {
             e.printStackTrace();
