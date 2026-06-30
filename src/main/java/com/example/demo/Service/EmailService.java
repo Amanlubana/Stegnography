@@ -1,41 +1,54 @@
 package com.example.demo.Service;
 
-import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import okhttp3.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    @Value("${BREVO_API_KEY}")
+    private String apiKey;
+
+    private final OkHttpClient client = new OkHttpClient();
 
     public void sendOtp(String toEmail, String otp) {
 
-        long start = System.currentTimeMillis();
+        String json = """
+        {
+          "sender": {
+            "name": "Steganography App",
+            "email": "yourgmail@gmail.com"
+          },
+          "to": [{
+            "email": "%s"
+          }],
+          "subject": "OTP for Password Reset",
+          "htmlContent": "<h2>Your OTP is <b>%s</b></h2><p>Valid for 5 minutes.</p>"
+        }
+        """.formatted(toEmail, otp);
 
-        try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message);
+        RequestBody body = RequestBody.create(
+                json,
+                MediaType.parse("application/json")
+        );
 
-            helper.setFrom("ambusy24o7@gmail.com");
-            helper.setTo(toEmail);
-            helper.setSubject("OTP for Password Reset");
-            helper.setText("Your OTP is: " + otp);
+        Request request = new Request.Builder()
+                .url("https://api.brevo.com/v3/smtp/email")
+                .post(body)
+                .addHeader("accept", "application/json")
+                .addHeader("api-key", apiKey)
+                .addHeader("content-type", "application/json")
+                .build();
 
-            System.out.println("Sending mail...");
+        try (Response response = client.newCall(request).execute()) {
 
-            mailSender.send(message);
-
-            System.out.println("Mail sent in "
-                    + (System.currentTimeMillis() - start) + " ms");
+            if (!response.isSuccessful()) {
+                throw new RuntimeException("Email failed: " + response.body().string());
+            }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to send email");
+            throw new RuntimeException("Failed to send email", e);
         }
     }
 }
