@@ -14,41 +14,31 @@ public class EmailService {
 
     public void sendOtp(String toEmail, String otp) {
 
-        String json = """
-        {
-          "sender": {
-            "name": "Steganography App",
-            "email": "yourgmail@gmail.com"
-          },
-          "to": [{
-            "email": "%s"
-          }],
-          "subject": "OTP for Password Reset",
-          "htmlContent": "<h2>Your OTP is <b>%s</b></h2><p>Valid for 5 minutes.</p>"
-        }
-        """.formatted(toEmail, otp);
+    System.out.println("Inside EmailService");
 
-        RequestBody body = RequestBody.create(
-                json,
-                MediaType.parse("application/json")
-        );
+    try {
 
-        Request request = new Request.Builder()
-                .url("https://api.brevo.com/v3/smtp/email")
-                .post(body)
-                .addHeader("accept", "application/json")
-                .addHeader("api-key", apiKey)
-                .addHeader("content-type", "application/json")
-                .build();
+        MimeMessage message = mailSender.createMimeMessage();
 
-        try (Response response = client.newCall(request).execute()) {
+        System.out.println("MimeMessage created");
 
-            if (!response.isSuccessful()) {
-                throw new RuntimeException("Email failed: " + response.body().string());
-            }
+        MimeMessageHelper helper = new MimeMessageHelper(message);
 
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to send email", e);
-        }
+        helper.setFrom("your_verified_sender@yourdomain.com");
+        helper.setTo(toEmail);
+        helper.setSubject("OTP");
+        helper.setText("Your OTP is " + otp);
+
+        System.out.println("Calling mailSender.send()");
+
+        mailSender.send(message);
+
+        System.out.println("Mail sent successfully");
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Failed to send email");
+    }
+}
     }
 }
