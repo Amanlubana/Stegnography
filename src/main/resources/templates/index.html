@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Steganography App</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -10,14 +9,26 @@
 <body>
 
 <div class="container">
-    <h1>🔐 Digital Steganography</h1>
-    <p>Hide and Extract Secret Messages in Images</p>
 
-    <div class="buttons">
-        <a href="/embed"><button>🔐 Embed Message</button></a>
-        <a href="/extract"><button>🔍 Extract Message</button></a>
+    <div class="card">
+
+        <h2>🔐 Digital Steganography</h2>
+
+        <p class="subtitle">
+            Hide and Extract Secret Messages in Images
+        </p>
+
+        <div class="dashboard-actions">
+            <a href="/embed">
+                <button class="primary-btn">🔐 Embed Message</button>
+            </a>
+
+            <a href="/extract">
+                <button class="secondary-btn">🔍 Extract Message</button>
+            </a>
+        </div>
+
     </div>
 </div>
-
 </body>
 </html>
