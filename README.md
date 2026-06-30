@@ -1,7 +1,8 @@
 # 🔐 Digital Steganography Web Application
 
 A full-stack secure web application that allows users to **hide and extract secret messages inside images** using **AES encryption** and **LSB (Least Significant Bit) steganography**.
-
+## 🚀 Live Demo
+https://stegnography.up.railway.app
 ---
 
 ## 🚀 Features
