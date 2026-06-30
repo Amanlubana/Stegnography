@@ -63,20 +63,27 @@ private Map<String, OtpData> otpStorage = new HashMap<>();
 
 
     // Generate OTP
-    public void generateOtp(String username) {
+   public void generateOtp(String username) {
 
-        User user = repo.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    System.out.println("Step 1");
 
-        String otp = String.valueOf(new Random().nextInt(900000) + 100000);
+    User user = repo.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
-        long expiryTime = System.currentTimeMillis() + (5 * 60 * 1000);
+    System.out.println("Step 2: User found = " + user.getEmail());
 
-        otpStorage.put(username, new OtpData(otp, expiryTime));
+    String otp = String.valueOf(new Random().nextInt(900000) + 100000);
 
-        // 📧 Send OTP to email (assuming username = email)
-        emailService.sendOtp(user.getEmail(), otp);
-    }
+    long expiryTime = System.currentTimeMillis() + (5 * 60 * 1000);
+
+    otpStorage.put(username, new OtpData(otp, expiryTime));
+
+    System.out.println("Step 3: Calling EmailService");
+
+    emailService.sendOtp(user.getEmail(), otp);
+
+    System.out.println("Step 4: Email sent");
+}
 
     // Verify OTP and reset password
     public void resetPasswordWithOtp(String username, String otp, String newPassword) {
