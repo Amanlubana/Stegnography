@@ -35,7 +35,10 @@ public class AuthController {
         this.emailService = emailService;
         this.repo = repo;
     }
-
+   @GetMapping("/")
+    public String home() {
+    return "redirect:/login";
+    }
     @GetMapping("/login")
     public String loginPage() {
         return "login";
